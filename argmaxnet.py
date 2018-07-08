@@ -44,8 +44,6 @@ class ResNetStack(nn.Module):
         #----
         self.stack = nn.ModuleList([ResNetBlock(iDim, hDim) for _ in range(count)])
         #----
-        def LS(w):
-            return w.weight.numel() + w.bias.numel()
         self.count = sum(nn.count for nn in self.stack)
         #----
     def forward(self, x):
