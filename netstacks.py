@@ -35,8 +35,7 @@ class Block(nn.Module):
         self.parameterCount = LS(self.W0) + LS(self.W1)
         #----
     def forward(self, x):
-        return self.W1(self.W0(x).abs()) + x
-        # return self.W1(self.W0(x).clamp(min=0)) + x
+        return (self.W1(self.W0(x).clamp(min=0)) + x).clamp(min=0.0)
 
 
 
@@ -53,6 +52,6 @@ class Stack(nn.Module):
         #----
     def forward(self, x):
         for nn in self.stack:
-            x = nn(x).clamp(min=0.0)
+            x = nn(x)
         return x
 

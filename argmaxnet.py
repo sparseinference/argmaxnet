@@ -11,76 +11,30 @@ Learn to compute the argmax function.
 import torch
 import torch.nn as nn
 
+from netstacks import Block,Stack
+
 import time
-
-
-class ResNetBlock(nn.Module):
-    """
-    A low-level ResNet module.
-    input dimension == output dimension,
-    with an expansion or contraction between them.
-    """
-    def __init__(self, iDim, hDim):
-        super().__init__()
-        #----
-        self.W0 = nn.Linear(iDim, hDim)
-        self.W1 = nn.Linear(hDim, iDim)
-        #----
-        def LS(w):
-            return w.weight.numel() + w.bias.numel()
-        self.count = LS(self.W0) + LS(self.W1)
-        #----
-    def forward(self, x):
-        return (self.W1(self.W0(x).abs()).abs() + x).abs()
-
-
-
-class ResNetStack(nn.Module):
-    """
-    A stack of Residual Net Blocks.
-    """
-    def __init__(self, iDim, hDim, count):
-        super().__init__()
-        #----
-        self.stack = nn.ModuleList([ResNetBlock(iDim, hDim) for _ in range(count)])
-        #----
-        self.count = sum(nn.count for nn in self.stack)
-        #----
-    def forward(self, x):
-        for nn in self.stack:
-            x = nn(x)
-        return x
-
-
-
 
 
 class ArgMaxNet(nn.Module):  
     """
     A neural net that learns to compute the argmax function.
     """
-    def __init__(self, iDim, hDim, depth):
+    def __init__(self, stackDepth, iDim, hDim, *args):
         super().__init__()
         #----
-        self.learningRate = 0.0001
-        self.momentum = 0.9
-        self.wd = 0
-        self.gamma = 0.90
         self.iDim = iDim
         self.hDim = hDim
+        self.stackDepth = stackDepth
         #----
-        self.resNetDepth = depth
-        self.Rn = ResNetStack(iDim, hDim, self.resNetDepth)
-        self.description = f"ArgMaxNet({iDim},{hDim},StackDepth({self.resNetDepth}),gamma={self.gamma}),SGD({self.learningRate},{self.momentum},weight_decay={self.wd})"
+        self.Rn = Stack(Block, stackDepth, iDim, hDim)
         #----
         self.Wn = nn.Linear(iDim, 1)
         #----
         def LS(w):
             return w.weight.numel() + w.bias.numel()
-        self.count = self.Rn.count + LS(self.Wn)
+        self.parameterCount = self.Rn.parameterCount + LS(self.Wn)
         #----
-        print(self.description)
-        print(f"Parameter count = {self.count}")
     #--------------------------------------
     def forward(self, scores):
         ln = self.Wn(self.Rn(scores)).abs()
@@ -119,21 +73,26 @@ class ArgMaxNet(nn.Module):
                 incorrect += (outputs.round() != labels).sum().item()
         return incorrect/testSize,loss/testSize
     #--------------------------------------
-    def learn(self, modelPath):
+    def learn(self, modelPath, learningRate = 0.001, momentum = 0.9, weightDecay=0, gamma=1.0):
         """
         Train the ArgMax neural net. 
         """
+        self.description =  f"ArgMaxNet : StackDepth={self.stackDepth}, Block({self.iDim},{self.hDim})"
+        optDescription = f"\n            opt: SGD(lr={learningRate} reduced by {gamma} each episode, momentum={momentum}, weight_decay={weightDecay})"
+        print(self.description + optDescription)
+        print(f"Parameter count = {self.parameterCount}")
+        #------------------
         epochs = 0
         teErr = 1.0
-        learningRate = self.learningRate/self.gamma
+        learningRate = learningRate/gamma
         startTime = time.time()
         try:
-            while teErr > 0.0:
+            while learningRate > 1.0e-6:  # or: teErr > 0.0:
                 epochs += 1
                 self.train(mode=True)
                 #--------------------
-                learningRate *= self.gamma
-                optimizer = torch.optim.SGD(self.parameters(), lr=learningRate, momentum=self.momentum, weight_decay=self.wd)
+                learningRate *= gamma
+                optimizer = torch.optim.SGD(self.parameters(), lr=learningRate, momentum=momentum, weight_decay=weightDecay)
                 optimizer.zero_grad()
                 #--------------------
                 for _ in range(15000):
