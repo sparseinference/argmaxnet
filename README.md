@@ -1,124 +1,123 @@
 # argmaxnet  
 
-
 An experiment in training a fully connected residual net to learn the argmax function.  
 This seems surprisingly difficult for such a simple problem.
 
 <hr>
 
-Experiment (*argmaxnet.py*):  
+Experiment:  
 
-- Raspberry Pi 3B+
 - Python 3.7
-- PyTorch 0.5.0a0+f40ed54
-- Stacked Residual Net, 4 residual modules deep.
-- the ResNet module is wide in the hidden layer with the input and output dimensions equal  
-(short, wide ResNets seem to converge more quickly)
-- the activation function is <code>abs()</code> not <code>ReLU</code>    
-
+- PyTorch 0.5.0a0+f3ac619
+- Stacked Residual Net with identical residual modules followed by a linear reduction to a single output
+- The residual modules are wide in the hidden layer with the input and output dimensions equal
 
 <hr>
 Training run:
 
 <pre>
 ➜  argmaxnet git:(master) ✗ python3 train.py
-ArgMaxNet(10,20,StackDepth(4),gamma=0.9),SGD(0.0001,0.9,weight_decay=0)
-Parameter count = 1731
-[    1] Loss: 0.936503   Err: 0.404400  elapsed:  0.029877 hours, lr=0.00010000
-[    2] Loss: 0.775802   Err: 0.188200  elapsed:  0.056166 hours, lr=0.00009000
-[    3] Loss: 0.466706   Err: 0.162600  elapsed:  0.082512 hours, lr=0.00008100
-[    4] Loss: 0.649453   Err: 0.305800  elapsed:  0.108644 hours, lr=0.00007290
-[    5] Loss: 0.489783   Err: 0.155000  elapsed:  0.134843 hours, lr=0.00006561
-[    6] Loss: 0.506927   Err: 0.388000  elapsed:  0.161110 hours, lr=0.00005905
-[    7] Loss: 0.417111   Err: 0.155000  elapsed:  0.187329 hours, lr=0.00005314
-[    8] Loss: 0.548050   Err: 0.259000  elapsed:  0.213462 hours, lr=0.00004783
-[    9] Loss: 0.554294   Err: 0.209400  elapsed:  0.239546 hours, lr=0.00004305
-[   10] Loss: 0.454473   Err: 0.260800  elapsed:  0.265748 hours, lr=0.00003874
-[   11] Loss: 0.368914   Err: 0.088400  elapsed:  0.292027 hours, lr=0.00003487
-[   12] Loss: 0.298227   Err: 0.075000  elapsed:  0.318126 hours, lr=0.00003138
-[   13] Loss: 0.358107   Err: 0.100600  elapsed:  0.344276 hours, lr=0.00002824
-[   14] Loss: 0.339421   Err: 0.082000  elapsed:  0.369695 hours, lr=0.00002542
-[   15] Loss: 0.382928   Err: 0.099000  elapsed:  0.394635 hours, lr=0.00002288
-[   16] Loss: 0.234183   Err: 0.069600  elapsed:  0.419311 hours, lr=0.00002059
-[   17] Loss: 0.237683   Err: 0.070800  elapsed:  0.444754 hours, lr=0.00001853
-[   18] Loss: 0.273791   Err: 0.085000  elapsed:  0.470706 hours, lr=0.00001668
-[   19] Loss: 0.407833   Err: 0.062600  elapsed:  0.496747 hours, lr=0.00001501
-[   20] Loss: 0.319596   Err: 0.069800  elapsed:  0.522825 hours, lr=0.00001351
-[   21] Loss: 0.271080   Err: 0.065200  elapsed:  0.548738 hours, lr=0.00001216
-[   22] Loss: 0.241903   Err: 0.060600  elapsed:  0.574896 hours, lr=0.00001094
-[   23] Loss: 0.190998   Err: 0.060200  elapsed:  0.600700 hours, lr=0.00000985
-[   24] Loss: 0.174027   Err: 0.058800  elapsed:  0.625549 hours, lr=0.00000886
-[   25] Loss: 0.238272   Err: 0.065200  elapsed:  0.650361 hours, lr=0.00000798
-[   26] Loss: 0.152129   Err: 0.050800  elapsed:  0.675327 hours, lr=0.00000718
-[   27] Loss: 0.146603   Err: 0.054400  elapsed:  0.700166 hours, lr=0.00000646
-[   28] Loss: 0.227547   Err: 0.047800  elapsed:  0.725068 hours, lr=0.00000581
-[   29] Loss: 0.182535   Err: 0.050400  elapsed:  0.749994 hours, lr=0.00000523
-[   30] Loss: 0.140753   Err: 0.043400  elapsed:  0.774781 hours, lr=0.00000471
-[   31] Loss: 0.159581   Err: 0.045000  elapsed:  0.799692 hours, lr=0.00000424
-[   32] Loss: 0.133405   Err: 0.045200  elapsed:  0.824695 hours, lr=0.00000382
-[   33] Loss: 0.152682   Err: 0.045600  elapsed:  0.849539 hours, lr=0.00000343
-[   34] Loss: 0.125633   Err: 0.042600  elapsed:  0.874443 hours, lr=0.00000309
-[   35] Loss: 0.128318   Err: 0.042800  elapsed:  0.899121 hours, lr=0.00000278
-[   36] Loss: 0.162865   Err: 0.040800  elapsed:  0.923788 hours, lr=0.00000250
-[   37] Loss: 0.103261   Err: 0.041200  elapsed:  0.948497 hours, lr=0.00000225
-[   38] Loss: 0.106623   Err: 0.040800  elapsed:  0.973385 hours, lr=0.00000203
-[   39] Loss: 0.176227   Err: 0.036200  elapsed:  0.998314 hours, lr=0.00000182
-[   40] Loss: 0.094803   Err: 0.039200  elapsed:  1.024723 hours, lr=0.00000164
-[   41] Loss: 0.123611   Err: 0.039600  elapsed:  1.050885 hours, lr=0.00000148
-[   42] Loss: 0.122700   Err: 0.033800  elapsed:  1.076998 hours, lr=0.00000133
-[   43] Loss: 0.119774   Err: 0.037600  elapsed:  1.103236 hours, lr=0.00000120
-[   44] Loss: 0.133163   Err: 0.040400  elapsed:  1.129316 hours, lr=0.00000108
-[   45] Loss: 0.160640   Err: 0.045200  elapsed:  1.155636 hours, lr=0.00000097
-[   46] Loss: 0.114480   Err: 0.032400  elapsed:  1.181919 hours, lr=0.00000087
-[   47] Loss: 0.095019   Err: 0.034400  elapsed:  1.207704 hours, lr=0.00000079
-[   48] Loss: 0.111298   Err: 0.033200  elapsed:  1.233838 hours, lr=0.00000071
-[   49] Loss: 0.106354   Err: 0.035200  elapsed:  1.260076 hours, lr=0.00000064
-[   50] Loss: 0.114164   Err: 0.036200  elapsed:  1.286173 hours, lr=0.00000057
-[   51] Loss: 0.070675   Err: 0.034400  elapsed:  1.312571 hours, lr=0.00000052
-[   52] Loss: 0.095508   Err: 0.036000  elapsed:  1.338761 hours, lr=0.00000046
-[   53] Loss: 0.113600   Err: 0.031400  elapsed:  1.364691 hours, lr=0.00000042
-[   54] Loss: 0.083376   Err: 0.035200  elapsed:  1.390994 hours, lr=0.00000038
-[   55] Loss: 0.085253   Err: 0.037600  elapsed:  1.416442 hours, lr=0.00000034
-[   56] Loss: 0.059367   Err: 0.029800  elapsed:  1.442435 hours, lr=0.00000030
-[   57] Loss: 0.097093   Err: 0.033000  elapsed:  1.468703 hours, lr=0.00000027
-[   58] Loss: 0.119242   Err: 0.039400  elapsed:  1.495025 hours, lr=0.00000025
-[   59] Loss: 0.085457   Err: 0.032800  elapsed:  1.521355 hours, lr=0.00000022
-[   60] Loss: 0.095210   Err: 0.036200  elapsed:  1.547571 hours, lr=0.00000020
-[   61] Loss: 0.080815   Err: 0.033000  elapsed:  1.573766 hours, lr=0.00000018
-[   62] Loss: 0.084177   Err: 0.038600  elapsed:  1.600004 hours, lr=0.00000016
-[   63] Loss: 0.087985   Err: 0.032600  elapsed:  1.625203 hours, lr=0.00000015
-[   64] Loss: 0.105078   Err: 0.037200  elapsed:  1.650140 hours, lr=0.00000013
-[   65] Loss: 0.067318   Err: 0.033600  elapsed:  1.675065 hours, lr=0.00000012
-[   66] Loss: 0.057762   Err: 0.033000  elapsed:  1.699900 hours, lr=0.00000011
-[   67] Loss: 0.068458   Err: 0.037800  elapsed:  1.724965 hours, lr=0.00000010
-[   68] Loss: 0.086128   Err: 0.035600  elapsed:  1.750480 hours, lr=0.00000009
-[   69] Loss: 0.091967   Err: 0.033400  elapsed:  1.776557 hours, lr=0.00000008
-[   70] Loss: 0.090020   Err: 0.039400  elapsed:  1.802642 hours, lr=0.00000007
-[   71] Loss: 0.102898   Err: 0.038200  elapsed:  1.828833 hours, lr=0.00000006
-[   72] Loss: 0.090425   Err: 0.035800  elapsed:  1.854919 hours, lr=0.00000006
-[   73] Loss: 0.092566   Err: 0.034400  elapsed:  1.881227 hours, lr=0.00000005
-[   74] Loss: 0.091237   Err: 0.034000  elapsed:  1.907272 hours, lr=0.00000005
-[   75] Loss: 0.071890   Err: 0.031600  elapsed:  1.933318 hours, lr=0.00000004
-[   76] Loss: 0.090209   Err: 0.030800  elapsed:  1.959562 hours, lr=0.00000004
-[   77] Loss: 0.069922   Err: 0.033200  elapsed:  1.985649 hours, lr=0.00000003
-[   78] Loss: 0.089059   Err: 0.033800  elapsed:  2.012150 hours, lr=0.00000003
-[   79] Loss: 0.116966   Err: 0.034000  elapsed:  2.038593 hours, lr=0.00000003
-[   80] Loss: 0.096969   Err: 0.032400  elapsed:  2.064903 hours, lr=0.00000002
+ArgMaxNet : StackDepth=3, Block(10,60)
+            opt: SGD(lr=0.0001 reduced by 0.98 each episode, momentum=0.9, weight_decay=0)
+Parameter count = 3821
+[    1] Loss: 0.841379   Err: 0.210000  elapsed:  0.009590 hours, lr=0.00010000
+[    2] Loss: 1.009749   Err: 0.158800  elapsed:  0.019381 hours, lr=0.00009800
+[    3] Loss: 0.673255   Err: 0.143200  elapsed:  0.029359 hours, lr=0.00009604
+[    4] Loss: 0.400579   Err: 0.085800  elapsed:  0.039462 hours, lr=0.00009412
+[    5] Loss: 0.522911   Err: 0.093000  elapsed:  0.049320 hours, lr=0.00009224
+[    6] Loss: 0.390506   Err: 0.077000  elapsed:  0.059192 hours, lr=0.00009039
+[    7] Loss: 0.352900   Err: 0.068200  elapsed:  0.069052 hours, lr=0.00008858
+[    8] Loss: 0.293024   Err: 0.069600  elapsed:  0.078911 hours, lr=0.00008681
+[    9] Loss: 0.308593   Err: 0.073800  elapsed:  0.088776 hours, lr=0.00008508
+[   10] Loss: 0.485971   Err: 0.069800  elapsed:  0.098606 hours, lr=0.00008337
+[   11] Loss: 0.503779   Err: 0.065200  elapsed:  0.108481 hours, lr=0.00008171
+[   12] Loss: 0.277030   Err: 0.060000  elapsed:  0.118357 hours, lr=0.00008007
+[   13] Loss: 0.223894   Err: 0.055800  elapsed:  0.128042 hours, lr=0.00007847
+[   14] Loss: 0.266146   Err: 0.059600  elapsed:  0.137845 hours, lr=0.00007690
+[   15] Loss: 0.316010   Err: 0.071800  elapsed:  0.147688 hours, lr=0.00007536
+[   16] Loss: 0.285165   Err: 0.050400  elapsed:  0.157558 hours, lr=0.00007386
+[   17] Loss: 0.392230   Err: 0.070600  elapsed:  0.167250 hours, lr=0.00007238
+[   18] Loss: 0.246672   Err: 0.051400  elapsed:  0.176823 hours, lr=0.00007093
+[   19] Loss: 0.209529   Err: 0.047200  elapsed:  0.186649 hours, lr=0.00006951
+[   20] Loss: 0.183141   Err: 0.038200  elapsed:  0.196483 hours, lr=0.00006812
+[   21] Loss: 0.212652   Err: 0.046800  elapsed:  0.206334 hours, lr=0.00006676
+[   22] Loss: 0.276476   Err: 0.050800  elapsed:  0.216203 hours, lr=0.00006543
+[   23] Loss: 0.289849   Err: 0.050800  elapsed:  0.225948 hours, lr=0.00006412
+[   24] Loss: 0.275776   Err: 0.051600  elapsed:  0.235879 hours, lr=0.00006283
+[   25] Loss: 0.200512   Err: 0.044600  elapsed:  0.245600 hours, lr=0.00006158
+[   26] Loss: 0.194553   Err: 0.041800  elapsed:  0.255548 hours, lr=0.00006035
+[   27] Loss: 0.169269   Err: 0.045200  elapsed:  0.265598 hours, lr=0.00005914
+[   28] Loss: 0.273164   Err: 0.045200  elapsed:  0.275583 hours, lr=0.00005796
+[   29] Loss: 0.272778   Err: 0.127400  elapsed:  0.285362 hours, lr=0.00005680
+[   30] Loss: 0.174689   Err: 0.050200  elapsed:  0.295156 hours, lr=0.00005566
+[   31] Loss: 0.285349   Err: 0.055200  elapsed:  0.304912 hours, lr=0.00005455
+[   32] Loss: 0.300190   Err: 0.041400  elapsed:  0.314661 hours, lr=0.00005346
+[   33] Loss: 0.202204   Err: 0.045000  elapsed:  0.324503 hours, lr=0.00005239
+[   34] Loss: 0.198700   Err: 0.040200  elapsed:  0.334367 hours, lr=0.00005134
+[   35] Loss: 0.202726   Err: 0.038800  elapsed:  0.344198 hours, lr=0.00005031
+[   36] Loss: 0.227932   Err: 0.045600  elapsed:  0.354049 hours, lr=0.00004931
+[   37] Loss: 0.168154   Err: 0.041200  elapsed:  0.363848 hours, lr=0.00004832
+[   38] Loss: 0.244279   Err: 0.043800  elapsed:  0.373667 hours, lr=0.00004735
+[   39] Loss: 0.192497   Err: 0.039800  elapsed:  0.383468 hours, lr=0.00004641
+[   40] Loss: 0.175515   Err: 0.040000  elapsed:  0.393374 hours, lr=0.00004548
+[   41] Loss: 0.132442   Err: 0.036400  elapsed:  0.403231 hours, lr=0.00004457
+[   42] Loss: 0.131879   Err: 0.032400  elapsed:  0.413111 hours, lr=0.00004368
+[   43] Loss: 0.239974   Err: 0.036400  elapsed:  0.422981 hours, lr=0.00004281
+[   44] Loss: 0.146880   Err: 0.034800  elapsed:  0.432853 hours, lr=0.00004195
+[   45] Loss: 0.116312   Err: 0.033400  elapsed:  0.442684 hours, lr=0.00004111
+[   46] Loss: 0.214501   Err: 0.035400  elapsed:  0.452548 hours, lr=0.00004029
+[   47] Loss: 0.277160   Err: 0.033400  elapsed:  0.462417 hours, lr=0.00003948
+[   48] Loss: 0.178411   Err: 0.034000  elapsed:  0.472273 hours, lr=0.00003869
+[   49] Loss: 0.246785   Err: 0.039400  elapsed:  0.482137 hours, lr=0.00003792
+[   50] Loss: 0.231782   Err: 0.038800  elapsed:  0.492130 hours, lr=0.00003716
+[   51] Loss: 0.157200   Err: 0.036600  elapsed:  0.502017 hours, lr=0.00003642
+[   52] Loss: 0.259224   Err: 0.035000  elapsed:  0.511886 hours, lr=0.00003569
+[   53] Loss: 0.262706   Err: 0.042200  elapsed:  0.521773 hours, lr=0.00003497
+[   54] Loss: 0.169639   Err: 0.029600  elapsed:  0.531676 hours, lr=0.00003428
+[   55] Loss: 0.280070   Err: 0.039000  elapsed:  0.541571 hours, lr=0.00003359
+[   56] Loss: 0.151866   Err: 0.029200  elapsed:  0.551473 hours, lr=0.00003292
+[   57] Loss: 0.201496   Err: 0.038000  elapsed:  0.561332 hours, lr=0.00003226
+[   58] Loss: 0.125637   Err: 0.031600  elapsed:  0.571196 hours, lr=0.00003161
+[   59] Loss: 0.218838   Err: 0.032000  elapsed:  0.581075 hours, lr=0.00003098
+[   60] Loss: 0.119034   Err: 0.028800  elapsed:  0.590925 hours, lr=0.00003036
+[   61] Loss: 0.087370   Err: 0.027000  elapsed:  0.600750 hours, lr=0.00002976
+[   62] Loss: 0.105404   Err: 0.029600  elapsed:  0.610550 hours, lr=0.00002916
+[   63] Loss: 0.202022   Err: 0.026000  elapsed:  0.620337 hours, lr=0.00002858
+[   64] Loss: 0.114809   Err: 0.028200  elapsed:  0.630182 hours, lr=0.00002801
+[   65] Loss: 0.156818   Err: 0.026400  elapsed:  0.639974 hours, lr=0.00002745
+[   66] Loss: 0.117886   Err: 0.027400  elapsed:  0.649795 hours, lr=0.00002690
+[   67] Loss: 0.148011   Err: 0.027200  elapsed:  0.659691 hours, lr=0.00002636
+[   68] Loss: 0.185504   Err: 0.032400  elapsed:  0.669347 hours, lr=0.00002583
+[   69] Loss: 0.158207   Err: 0.026200  elapsed:  0.678770 hours, lr=0.00002531
+[   70] Loss: 0.211314   Err: 0.036000  elapsed:  0.688219 hours, lr=0.00002481
+[   71] Loss: 0.123811   Err: 0.029000  elapsed:  0.697775 hours, lr=0.00002431
+[   72] Loss: 0.121323   Err: 0.024200  elapsed:  0.707256 hours, lr=0.00002383
+[   73] Loss: 0.092815   Err: 0.025200  elapsed:  0.716782 hours, lr=0.00002335
+[   74] Loss: 0.077281   Err: 0.025600  elapsed:  0.726131 hours, lr=0.00002288
+[   75] Loss: 0.127059   Err: 0.026400  elapsed:  0.735463 hours, lr=0.00002242
+[   76] Loss: 0.135494   Err: 0.023200  elapsed:  0.744721 hours, lr=0.00002198
+[   77] Loss: 0.095448   Err: 0.023400  elapsed:  0.753993 hours, lr=0.00002154
+[   78] Loss: 0.137425   Err: 0.027600  elapsed:  0.763382 hours, lr=0.00002111
+[   79] Loss: 0.105115   Err: 0.023200  elapsed:  0.772932 hours, lr=0.00002068
+[   80] Loss: 0.135414   Err: 0.024000  elapsed:  0.782717 hours, lr=0.00002027
+[   81] Loss: 0.146738   Err: 0.027800  elapsed:  0.792537 hours, lr=0.00001986
+[   82] Loss: 0.109915   Err: 0.023200  elapsed:  0.802295 hours, lr=0.00001947
+[   83] Loss: 0.100822   Err: 0.023200  elapsed:  0.812065 hours, lr=0.00001908
+[   84] Loss: 0.129659   Err: 0.024000  elapsed:  0.821850 hours, lr=0.00001870
+[   85] Loss: 0.117406   Err: 0.026800  elapsed:  0.831664 hours, lr=0.00001832
+[   86] Loss: 0.097301   Err: 0.024600  elapsed:  0.841496 hours, lr=0.00001796
+[   87] Loss: 0.088146   Err: 0.020000  elapsed:  0.851277 hours, lr=0.00001760
+[   88] Loss: 0.108722   Err: 0.020400  elapsed:  0.861119 hours, lr=0.00001725
+[   89] Loss: 0.105350   Err: 0.024800  elapsed:  0.870881 hours, lr=0.00001690
+[   90] Loss: 0.140298   Err: 0.023400  elapsed:  0.880625 hours, lr=0.00001656
+[   91] Loss: 0.081200   Err: 0.021400  elapsed:  0.890413 hours, lr=0.00001623
+[   92] Loss: 0.114371   Err: 0.021400  elapsed:  0.900247 hours, lr=0.00001591
+[   93] Loss: 0.206781   Err: 0.024200  elapsed:  0.910042 hours, lr=0.00001559
+[   94] Loss: 0.171771   Err: 0.022200  elapsed:  0.919865 hours, lr=0.00001528
+[   95] Loss: 0.120925   Err: 0.022200  elapsed:  0.929604 hours, lr=0.00001497
+[   96] Loss: 0.087923   Err: 0.022400  elapsed:  0.939338 hours, lr=0.00001467
+[   97] Loss: 0.081036   Err: 0.023000  elapsed:  0.949043 hours, lr=0.00001438
+[   98] Loss: 0.105851   Err: 0.024000  elapsed:  0.958831 hours, lr=0.00001409
+[   99] Loss: 0.116960   Err: 0.026200  elapsed:  0.968549 hours, lr=0.00001381
+[  100] Loss: 0.065967   Err: 0.017200  elapsed:  0.978295 hours, lr=0.00001353
 </pre>
-
-<hr>
-Test:
-
-<pre>
-➜  argmaxnet git:(master) ✗ python3 test.py
-ArgMaxNet(10,20,StackDepth(4),gamma=0.9),SGD(0.0001,0.9,weight_decay=0)
-Parameter count = 1731
-Testing 100 batches of 500 random scores ...
-Loss: 0.086108   Err: 0.033420  elapsed: 0.000195 hours  perInstance: 0.014018 ms
-</pre>
-
-
-
-
-
-
