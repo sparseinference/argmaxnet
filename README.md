@@ -13,7 +13,7 @@ Experiment:
 - The residual modules are wide in the hidden layer with the input and output dimensions equal
 
 <hr>
-Training run:
+Training:
 
 <pre>
 ➜  argmaxnet git:(master) ✗ python3 train.py
@@ -120,4 +120,12 @@ Parameter count = 3821
 [   98] Loss: 0.105851   Err: 0.024000  elapsed:  0.958831 hours, lr=0.00001409
 [   99] Loss: 0.116960   Err: 0.026200  elapsed:  0.968549 hours, lr=0.00001381
 [  100] Loss: 0.065967   Err: 0.017200  elapsed:  0.978295 hours, lr=0.00001353
+</pre>
+
+Test:
+
+<pre>
+➜  argmaxnet git:(master) ✗ python3 test.py
+Testing 100 batches of 500 random scores ...
+Loss: 0.103573   Err: 0.018920  elapsed: 0.001009 hours  perInstance: 0.072660 ms
 </pre>

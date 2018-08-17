@@ -9,13 +9,13 @@ Test the net.
 """
 
 from argmaxnet import ArgMaxNet
-
+import os
 
 #=================================================================
-modelPath = "/home/pi/models/argmaxnet/ArgMaxNet(10,20,StackDepth(4),gamma=0.9),SGD(0.0001,0.9,weight_decay=0),[81][0.03240].model"
+modelPath = os.path.expanduser('~/models/argmaxnet/ArgMaxNet : StackDepth=3, Block(10,60),[111][0.02220].model')
 #==================================================================================================
 
-net = ArgMaxNet(10, 20, 4)
+net = ArgMaxNet(3, 10, 60)
 net.load(modelPath)
 net.test(100, 500)
 
